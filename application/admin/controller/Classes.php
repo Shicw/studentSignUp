@@ -19,8 +19,24 @@ class Classes extends AdminBaseController
      * 班级管理页
      */
     public function index(){
+        //关键字查询
+        $request = input('request.');
+        $keyword = '';
+        $conditions = [];
+        if (!empty($request['keyword'])) {
+            $keyword = $request['keyword'];
+
+            $conditions['name'] = ['like', "%$keyword%"];
+        }
         //获取班级列表
-        $rows = Db::name('class')->where(['delete_time'=>0])->paginate(15,false);
+        $rows = Db::name('class')
+            ->where(['delete_time'=>0])
+            ->where($conditions)
+            ->paginate(15,false, [
+            'query' => [
+                'keyword' => $keyword,
+            ]
+        ]);
         $page = $rows->render();
         $this->assign([
             'rows' => $rows,

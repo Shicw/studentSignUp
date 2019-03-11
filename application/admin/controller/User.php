@@ -26,19 +26,14 @@ class User extends AdminBaseController
         if (!empty($request['keyword'])) {
             $keyword = $request['keyword'];
 
-            $conditions['u.id|mobile|u.name|m.name|c.name'] = ['like', "%$keyword%"];
+            $conditions['name|mobile|username'] = ['like', "%$keyword%"];
         }
         $rows = Db::name('user u')
-            ->field(['u.id','u.name','u.username','u.sex','u.type','u.mobile','m.name major','c.name class',
-                "IF(u.last_login_time>0, FROM_UNIXTIME(u.last_login_time,'%Y-%m-%d %H:%i:%s'), '无') last_login_time",
-                "FROM_UNIXTIME(u.create_time,'%Y-%m-%d %H:%i:%s') create_time"
-            ])
-            ->join([
-                ['major m','m.id=u.major_id'],
-                ['class c','c.id=u.class_id']
+            ->field(['u.*',"FROM_UNIXTIME(u.create_time,'%Y-%m-%d %H:%i:%s') create_time",
+                "IF(u.last_login_time>0, FROM_UNIXTIME(u.last_login_time,'%Y-%m-%d %H:%i:%s'), '无') last_login_time"
             ])
             ->where($conditions)
-            ->where(['u.type'=>['>',0],'u.delete_time'=>0])
+            ->where(['u.type'=>1,'u.delete_time'=>0])
             ->order('u.create_time desc')
             ->paginate(15,false, [
                 'query' => [
@@ -50,9 +45,11 @@ class User extends AdminBaseController
             'rows' => $rows,
             'page' => $page
         ]);
-        //获取专业列表
-        $majorList = Db::name('major')->field(['id','name'])->where(['delete_time'=>0])->select();
-        $this->assign('majorList',$majorList);
+        return $this->fetch();
+    }
+    public function add(){
+        $classList = Db::name('class')->where('delete_time',0)->select();
+        $this->assign('classList',$classList);
         return $this->fetch();
     }
 }
