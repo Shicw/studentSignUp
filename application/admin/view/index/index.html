@@ -56,25 +56,8 @@
       </form>
     </div>
   </div>
-</div><div class="am-popup" id="createModal">
-  <div class="am-popup-inner">
-    <div class="am-popup-hd">
-      <h4 class="am-popup-title">设置开课起止时间</h4>
-      <span data-am-modal-close class="am-close">&times;</span>
-    </div>
-    <div class="am-popup-bd">
-      <form method="post" class="am-form">
-        <label>开始时间</label>
-        <input type="text" name="create_start_time" class="am-form-field" value="{$create.start_time|date='Y-m-d H:i',###}">
-        <label>结束时间</label>
-        <input type="text" name="create_stop_time" class="am-form-field" value="{$create.stop_time|date='Y-m-d H:i',###}">
-        <div class="am-cf">
-          <a class="am-btn am-btn-primary am-btn-sm am-fl" href="javascript:;" id="createSubmit">保存</a>
-        </div>
-      </form>
-    </div>
-  </div>
 </div>
+
 <a href="#" class="am-icon-btn am-icon-th-list am-show-sm-only admin-menu" data-am-offcanvas="{target: '#admin-offcanvas'}"></a>
 <script src="__STATIC__/datetimepicker/js/amazeui.datetimepicker.min.js"></script>
 <script>
@@ -114,23 +97,7 @@
                 }
             },"json");
         });
-        $("#createSubmit").on("click",function(){
-            var startTime = $("input[name='create_start_time']").val();
-            var stopTime = $("input[name='create_stop_time']").val();
-            if(startTime=='' || stopTime==''){
-                layer.msg('起止时间不能为空',{time:1500,icon:5});
-                return false;
-            }
-            $.post("/admin/Index/createTimeSetting",{startTime:startTime,stopTime:stopTime},function(res){
-                if(res.code==1){
-                    $(".am-panel-bd").find('span').html(startTime+' -- '+stopTime);
-                    layer.msg(res.msg,{time:1500,icon:6});
-                    $('#createModal').modal('close');
-                }else{
-                    layer.msg(res.msg,{time:1500,icon:5});
-                }
-            },"json");
-        });
+
     });
 </script>
 </body>

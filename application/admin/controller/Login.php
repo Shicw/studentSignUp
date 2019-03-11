@@ -36,7 +36,6 @@ class Login extends Controller
         $model = new UserModel();
         $result = $model->doLogin($username,$password,'admin');//登录验证
         if($result['code']==1){
-            addLog('管理员登录',getAdminId());//记录日志
             $this->success($result['msg'],'/admin/Index/index');
         }else{
             $this->error($result['msg']);
@@ -46,7 +45,6 @@ class Login extends Controller
      * 注销
      */
     public function loginOut(){
-        addLog('管理员注销',getAdminId());//记录日志
         session('admin',null);
         $this->success('注销成功');
     }

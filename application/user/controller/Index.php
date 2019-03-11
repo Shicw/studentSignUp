@@ -14,8 +14,7 @@ class Index extends UserBaseController
     public function index(){
         //获取登录用户信息
         $user = getUser();
-        $user['major'] = Db::name('major')->where('id',$user['major_id'])->value('name');
-        $user['class'] = Db::name('class')->where('id',$user['class_id'])->value('name');
+
         $this->assign($user);
         return $this->fetch();
     }
@@ -45,7 +44,6 @@ class Index extends UserBaseController
         $model = new UserModel();
         $result = $model->changePassword($username,$oldPassword,$newPassword);//登录验证
         if($result['code']==1){
-            addLog('修改密码',getUserId());//记录日志
             $this->success($result['msg']);
         }else{
             $this->error($result['msg']);
