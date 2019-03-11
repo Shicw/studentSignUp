@@ -1,0 +1,137 @@
+{include file="public/head" /}
+<link rel="stylesheet" href="__STATIC__/datetimepicker/css/amazeui.datetimepicker.css"/>
+<style>
+  .am-panel{margin-top: 1%}
+  .am-panel button{float: right}
+  #Modal{height: 350px}
+</style>
+</head>
+<body>
+{include file="public/top" /}
+<div class="am-cf admin-main">
+  {include file="public/nav" /}
+
+  <!-- content start -->
+  <div class="admin-content">
+    <div class="admin-content-body">
+      <div class="am-cf am-padding">
+        <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">本次选课起止时间</strong></div><br>
+        <div class="am-panel am-panel-default">
+          <div class="am-panel-bd">
+            <span>{$select.start_time|date="Y-m-d H:i",###} -- {$select.stop_time|date="Y-m-d H:i",###}</span>
+            <button type="button" class="am-btn am-btn-default am-radius am-btn-sm" id="selectBtn">设置</button>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <div class="am-cf am-padding">
+        <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">本次开课起止时间</strong></div><br>
+        <div class="am-panel am-panel-default">
+          <div class="am-panel-bd">
+            <span>{$create.start_time|date="Y-m-d H:i",###} -- {$create.stop_time|date="Y-m-d H:i",###}</span>
+            <button type="button" class="am-btn am-btn-default am-radius am-btn-sm" id="createBtn">设置</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- content end -->
+</div>
+<!--模态框-->
+<div class="am-popup" id="selectModal">
+  <div class="am-popup-inner">
+    <div class="am-popup-hd">
+      <h4 class="am-popup-title">设置选课起止时间</h4>
+      <span data-am-modal-close class="am-close">&times;</span>
+    </div>
+    <div class="am-popup-bd">
+      <form method="post" class="am-form">
+        <label>开始时间</label>
+        <input type="text" name="select_start_time" class="am-form-field" value="{$select.start_time|date='Y-m-d H:i',###}">
+        <label>结束时间</label>
+        <input type="text" name="select_stop_time" class="am-form-field" value="{$select.stop_time|date='Y-m-d H:i',###}">
+        <div class="am-cf">
+          <a class="am-btn am-btn-primary am-btn-sm am-fl" href="javascript:;" id="selectSubmit">保存</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div><div class="am-popup" id="createModal">
+  <div class="am-popup-inner">
+    <div class="am-popup-hd">
+      <h4 class="am-popup-title">设置开课起止时间</h4>
+      <span data-am-modal-close class="am-close">&times;</span>
+    </div>
+    <div class="am-popup-bd">
+      <form method="post" class="am-form">
+        <label>开始时间</label>
+        <input type="text" name="create_start_time" class="am-form-field" value="{$create.start_time|date='Y-m-d H:i',###}">
+        <label>结束时间</label>
+        <input type="text" name="create_stop_time" class="am-form-field" value="{$create.stop_time|date='Y-m-d H:i',###}">
+        <div class="am-cf">
+          <a class="am-btn am-btn-primary am-btn-sm am-fl" href="javascript:;" id="createSubmit">保存</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<a href="#" class="am-icon-btn am-icon-th-list am-show-sm-only admin-menu" data-am-offcanvas="{target: '#admin-offcanvas'}"></a>
+<script src="__STATIC__/datetimepicker/js/amazeui.datetimepicker.min.js"></script>
+<script>
+    $(function(){
+        $("input[name='select_start_time']").datetimepicker({
+            format: 'yyyy-mm-dd hh:ii'
+        });
+        $("input[name='select_stop_time']").datetimepicker({
+            format: 'yyyy-mm-dd hh:ii'
+        });
+        $("input[name='create_start_time']").datetimepicker({
+            format: 'yyyy-mm-dd hh:ii'
+        });
+        $("input[name='create_stop_time']").datetimepicker({
+            format: 'yyyy-mm-dd hh:ii'
+        });
+        $("#selectBtn").on("click",function(){
+            $('#selectModal').modal();
+        });
+        $("#createBtn").on("click",function(){
+            $('#createModal').modal();
+        });
+        $("#selectSubmit").on("click",function(){
+            var startTime = $("input[name='select_start_time']").val();
+            var stopTime = $("input[name='select_stop_time']").val();
+            if(startTime=='' || stopTime==''){
+                layer.msg('起止时间不能为空',{time:1500,icon:5});
+                return false;
+            }
+            $.post("/admin/Index/selectTimeSetting",{startTime:startTime,stopTime:stopTime},function(res){
+                if(res.code==1){
+                    $(".am-panel-bd").find('span').html(startTime+' -- '+stopTime);
+                    layer.msg(res.msg,{time:1500,icon:6});
+                    $('#selectModal').modal('close');
+                }else{
+                    layer.msg(res.msg,{time:1500,icon:5});
+                }
+            },"json");
+        });
+        $("#createSubmit").on("click",function(){
+            var startTime = $("input[name='create_start_time']").val();
+            var stopTime = $("input[name='create_stop_time']").val();
+            if(startTime=='' || stopTime==''){
+                layer.msg('起止时间不能为空',{time:1500,icon:5});
+                return false;
+            }
+            $.post("/admin/Index/createTimeSetting",{startTime:startTime,stopTime:stopTime},function(res){
+                if(res.code==1){
+                    $(".am-panel-bd").find('span').html(startTime+' -- '+stopTime);
+                    layer.msg(res.msg,{time:1500,icon:6});
+                    $('#createModal').modal('close');
+                }else{
+                    layer.msg(res.msg,{time:1500,icon:5});
+                }
+            },"json");
+        });
+    });
+</script>
+</body>
+</html>

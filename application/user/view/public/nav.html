@@ -1,0 +1,15 @@
+<div class="admin-sidebar am-offcanvas" id="admin-offcanvas">
+    <div class="am-offcanvas-bar admin-offcanvas-bar">
+        <ul class="am-list admin-sidebar-list">
+            <li><a href="/user/Index/index"><span class="am-icon-home"></span> 首页</a></li>
+            {eq name="$type" value="1"}
+            <li><a href="/user/Course/index"><span class="am-icon-book"></span> 课程列表</a></li>
+            <li><a href="/user/Course/myJoin"><span class="am-icon-book"></span> 我的课程</a></li>
+                {else\}
+            <li><a href="/user/Course/myCreate"><span class="am-icon-book"></span> 我开设的课程</a></li>
+            <li><a href="/user/Course/create"><span class="am-icon-plus"></span> 创建课程</a></li>
+            {/eq}
+            <li><a href="/user/Index/changePassword"><span class="am-icon-cog"></span> 修改密码</a></li>
+        </ul>
+    </div>
+</div>

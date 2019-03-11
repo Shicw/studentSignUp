@@ -1,0 +1,41 @@
+{include file="public/head" /}
+  <style>
+    .header {
+      text-align: center;
+    }
+    .header h1 {
+      font-size: 200%;
+      color: #333;
+      margin-top: 30px;
+    }
+    .header p {
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+<div class="header">
+  <div class="am-g">
+    <h1>后台登录</h1>
+    <p>学生网上选课系统</p>
+  </div>
+  <hr />
+</div>
+<div class="am-g">
+  <div class="am-u-lg-6 am-u-md-8 am-u-sm-centered">
+    <form method="post" class="am-form" action="/admin/Login/doLogin">
+      <label>用户名</label>
+      <input type="text" name="username">
+      <br>
+      <label>密码</label>
+      <input type="password" name="password">
+      <br>
+      <div class="am-cf">
+        <a class="am-btn am-btn-primary am-btn-sm am-fl ajax-submit" href="javascript:;">登录</a>
+      </div>
+    </form>
+  </div>
+</div>
+<script src="__STATIC__/js/ajax_form.js"></script>
+</body>
+</html>

@@ -1,0 +1,251 @@
+{include file="public/head" /}
+</head>
+<body>
+{include file="public/top" /}
+<div class="am-cf admin-main">
+    {include file="public/nav" /}
+
+    <!-- content start -->
+    <div class="admin-content">
+        <div class="admin-content-body">
+            <div class="am-cf am-padding">
+                <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">用户信息管理</strong> / <small>用户列表</small></div>
+
+            </div>
+
+            <div class="am-u-md-10">
+                <div class="am-btn-toolbar">
+                    <div class="am-btn-group am-btn-group-xs">
+                        <button type="button" class="am-btn am-btn-default" id="add"><span class="am-icon-plus"></span> 新增</button>
+                    </div>
+                    <div class="am-u-sm-12 am-u-md-4" style="float: right">
+                        <form method="post" action="/admin/User/index">
+                            <div class="am-form-group">
+                                <input type="text" name="keyword" value="{:input('request.keyword')}">
+                                <button type="submit" class="am-btn am-btn-default am-btn-xs">搜索</button>
+                                <a href="/admin/User/index" class="am-btn am-btn-default am-btn-xs">重置</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <table class="am-table am-table-bd am-table-striped admin-content-table">
+                    <thead>
+                    <tr>
+                        <th>用户编号</th>
+                        <th>用户名</th>
+                        <th>姓名</th>
+                        <th>性别</th>
+                        <th>手机</th>
+                        <th>类型</th>
+                        <th>专业班级</th>
+                        <th>最后登录时间</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {php}
+                    $Sex = ['未设置','男','女'];
+                    $Type = ['admin','学生','教师'];
+                    {/php}
+                    {volist name="rows" id="vo"}
+                    <tr>
+                        <td>{$vo.id}</td>
+                        <td>{$vo.username}</td>
+                        <td>{$vo.name}</td>
+                        <td>{$Sex[$vo.sex]}</td>
+                        <td>{$vo.mobile|default='无'}</td>
+                        <td>{$Type[$vo.type]}</td>
+                        <td>{$vo.major}-{$vo.class}</td>
+                        <td>{$vo.last_login_time}</td>
+                        <td>
+                            <div class="am-btn-toolbar">
+                                <div class="am-btn-group am-btn-group-xs">
+                                    <button class="am-btn am-btn-default am-btn-xs am-text-secondary" onclick="edit({$vo.id})"><span class="am-icon-pencil-square-o"></span> 编辑</button>
+                                    <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only" onclick="del(this,{$vo.id})"><span class="am-icon-trash-o"></span> 删除</button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {/volist}
+                    </tbody>
+                </table>
+                <span>共{$rows->total()}条记录</span>
+                <div class="pagination" style="float: right">{$page}</div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--添加用户模态框-->
+<div class="am-popup" id="addModal">
+    <div class="am-popup-inner">
+        <div class="am-popup-hd">
+            <h4 class="am-popup-title">添加用户</h4>
+            <span data-am-modal-close class="am-close">&times;</span>
+        </div>
+        <div class="am-popup-bd">
+            <form method="post" class="am-form" action="/admin/User/addPost">
+                <label>用户编号/用户名</label>
+                <input type="text" name="id">
+                <label>姓名</label>
+                <input type="text" name="name">
+                <label>手机</label>
+                <input type="text" name="mobile">
+                <label>性别</label>
+                <div class="am-form-group">
+                    <label class="am-radio-inline">
+                        <input type="radio" value="1" name="sex"> 男
+                    </label>
+                    <label class="am-radio-inline">
+                        <input type="radio" value="2" name="sex"> 女
+                    </label>
+                </div>
+                <label>专业班级</label>
+                <select name="major_id">
+                    <option value="" hidden>请选择专业</option>
+                    {volist name="majorList" id="vo"}
+                    <option value="{$vo.id}">{$vo.name}</option>
+                    {/volist}
+                </select>
+                <select name="class_id">
+                    <option value="" hidden>请选班级</option>
+                </select>
+                <label>类型</label>
+                <div class="am-form-group">
+                    <label class="am-radio-inline">
+                        <input type="radio" value="1" name="type"> 学生
+                    </label>
+                    <label class="am-radio-inline">
+                        <input type="radio" value="2" name="type"> 教师
+                    </label>
+                </div>
+                <div class="am-cf">
+                    <a class="am-btn am-btn-primary am-btn-sm am-fl ajax-submit" href="javascript:;">提交</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--编辑用户模态框-->
+<div class="am-popup" id="editModal">
+    <div class="am-popup-inner">
+        <div class="am-popup-hd">
+            <h4 class="am-popup-title">编辑用户</h4>
+            <span data-am-modal-close
+                  class="am-close">&times;</span>
+        </div>
+        <div class="am-popup-bd">
+            <form method="post" class="am-form" action="/admin/User/editPost">
+                <label>用户编号/用户名</label>
+                <input type="text" name="id">
+                <label>姓名</label>
+                <input type="text" name="name">
+                <label>手机</label>
+                <input type="text" name="mobile">
+                <label>性别</label>
+                <div class="am-form-group">
+                    <label class="am-radio-inline">
+                        <input type="radio" value="1" name="sex"> 男
+                    </label>
+                    <label class="am-radio-inline">
+                        <input type="radio" value="2" name="sex"> 女
+                    </label>
+                </div>
+                <label>专业班级</label>
+                <select name="major_id">
+                    <option value="" hidden>请选择专业</option>
+                </select>
+                <select name="class_id">
+                    <option value="" hidden>请选班级</option>
+                </select>
+                <label>类型</label>
+                <div class="am-form-group">
+                    <label class="am-radio-inline">
+                        <input type="radio" value="1" name="type"> 学生
+                    </label>
+                    <label class="am-radio-inline">
+                        <input type="radio" value="2" name="type"> 教师
+                    </label>
+                </div>
+                <div class="am-cf">
+                    <a class="am-btn am-btn-primary am-btn-sm am-fl ajax-submit" href="javascript:;">提交</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- content end -->
+</div>
+<a href="#" class="am-icon-btn am-icon-th-list am-show-sm-only admin-menu" data-am-offcanvas="{target: '#admin-offcanvas'}"></a>
+<script src="__STATIC__/js/ajax_form.js"></script>
+<script>
+    $(function(){
+        $("#add").on("click",function(){
+            $('#addModal').modal();
+        });
+        //监听专业选择框
+        $("select[name='major_id']").on('change', function (e) {
+            $("select[name='class_id']").find("option:not(:first)").remove();
+            //option:not(:first)").remove();
+            var majorId = e.target.value;
+            $.post("{:url('admin/Classes/loadClass')}",{majorId:majorId},function(res){
+                if(res.code==1){
+                    var classSelect = $("select[name='class_id']");
+                    for(var key in res.data){
+                        var value = res.data[key];
+                        classSelect.append('<option value="' + value.id + '">' + value.name + '</option>');
+                    }
+                }
+            });
+        });
+    });
+    function edit(id) {
+        if(id == ''){
+            layer.msg('参数获取失败,请刷新重试', {time: 1500, icon: 5});
+            return false;
+        }
+        $.post("{:url('admin/User/getDetail')}", {id: id}, function (res) {
+            var detail = res.data.detail;
+            var majorList = res.data.majorList;
+            var classList = res.data.classList;
+            var editForm = $("#editModal").find("form");//获取编辑表单
+            //表单赋值
+            editForm.find("input[name='id']").val(detail.id);
+            editForm.find("input[name='name']").val(detail.name);
+            editForm.find("input[name='mobile']").val(detail.mobile);
+            editForm.find(":radio[name='sex'][value='" + detail.sex + "']").prop("checked", "checked");
+            editForm.find(":radio[name='type'][value='" + detail.type + "']").prop("checked", "checked");
+            //专业班级select赋值
+            var majorSelect = editForm.find("select[name='major_id']");
+            var classSelect = editForm.find("select[name='class_id']");
+            for(var key1 in majorList){
+                var value1 = majorList[key1];
+                majorSelect.append('<option value="' + value1.id + '">' + value1.name + '</option>');
+            }
+            for(var key2 in classList){
+                var value2 = classList[key2];
+                classSelect.append('<option value="' + value2.id + '">' + value2.name + '</option>');
+            }
+            //专业班级select赋值
+            majorSelect.find("option[value='"+detail.major_id+"']").attr("selected","selected");
+            classSelect.find("option[value='"+detail.class_id+"']").attr("selected","selected");
+            //console.log(res.data);
+        });
+        $('#editModal').modal();
+    }
+    function del(self,id) {
+        layer.confirm('确认要删除吗?', function (index) {
+            $.post("{:url('admin/User/delete')}", {id: id}, function (res) {
+                if (res.code == 1) {
+                    $(self).closest("tr").remove();//前端删除
+                    layer.msg(res.msg, {time: 1500, icon: 6});
+                } else {
+                    layer.msg(res.msg, {time: 1500, icon: 5});
+                }
+            });
+        });
+    }
+
+</script>
+</body>
+</html>
