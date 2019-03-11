@@ -19,11 +19,13 @@ class UserModel extends Model
      * @return array
      */
     public function doLogin($username, $password, $type){
-        $find = $this->field(['id', 'username', 'name', 'type','mobile','major_id','class_id'])
-            ->where(['username' => $username, 'password' => md5($password)])
+        $find = $this->where(['username' => $username, 'password' => md5($password)])
             ->find();
         if ($find) {
             $find = $find->toArray();
+            if($find['status']===0){
+                return ['code' => 0, 'msg' => '您的账号已被禁止登录,请联系管理员'];
+            }
             session($type, $find);//保存session
             //更新最后登录时间
             $this->where('id', $find['id'])->update(['last_login_time' => time()]);
