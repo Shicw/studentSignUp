@@ -10,24 +10,25 @@
         <div class="admin-content-body">
             <div class="am-cf am-padding">
                 <div class="am-fl am-cf">
-                    <strong class="am-text-primary am-text-lg">报名项目管理</strong> / <small>新建报名项目</small>
+                    <strong class="am-text-primary am-text-lg">报名项目管理</strong> / <small>修改报名项目</small>
                     >><a href="/admin/Signup/index"><small>返回"报名项目列表"</small></a>
                 </div>
             </div>
             <div class="am-u-md-6">
-                <form method="post" class="am-form" action="/admin/Signup/addPost">
+                <form method="post" class="am-form" action="/admin/Signup/editPost">
                     <label>报名项目名称</label>
-                    <input type="text" name="name">
+                    <input type="text" name="name" value="{$name}">
                     <label>描述</label>
-                    <input type="text" name="description">
+                    <input type="text" name="description" value="{$description}">
                     <label>报名人数上限</label>
-                    <input type="number" name="max_student_count" placeholder="若不限制请填0">
+                    <input type="number" name="max_student_count" placeholder="若不限制请填0" value="{$max_student_count}">
                     <label>报名开始时间</label>
-                    <input type="text" name="begin_time" class="am-form-field" id="begin_time" readonly>
+                    <input type="text" name="begin_time" class="am-form-field" id="begin_time" readonly value="{$begin_time|date='Y-m-d H:i',###}">
                     <label>报名结束时间</label>
-                    <input type="text" name="end_time" class="am-form-field" id="end_time" readonly>
+                    <input type="text" name="end_time" class="am-form-field" id="end_time" readonly value="{$end_time|date='Y-m-d H:i',###}">
                     <div class="am-cf">
-                        <a class="am-btn am-btn-primary am-btn-sm am-fl ajax-submit" href="javascript:;">添加</a>
+                        <input type="hidden" name="id" value="{$id}">
+                        <a class="am-btn am-btn-primary am-btn-sm am-fl ajax-submit" href="javascript:;">提交</a>
                     </div>
                 </form>
             </div>
