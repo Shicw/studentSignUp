@@ -29,9 +29,10 @@ class User extends AdminBaseController
             $conditions['name|mobile|username'] = ['like', "%$keyword%"];
         }
         $rows = Db::name('user u')
-            ->field(['u.*',"FROM_UNIXTIME(u.create_time,'%Y-%m-%d %H:%i:%s') create_time",
+            ->field(['u.*',"FROM_UNIXTIME(u.create_time,'%Y-%m-%d %H:%i:%s') create_time",'c.name class',
                 "IF(u.last_login_time>0, FROM_UNIXTIME(u.last_login_time,'%Y-%m-%d %H:%i:%s'), '无') last_login_time"
             ])
+            ->join('class c','c.id=u.class_id')
             ->where($conditions)
             ->where(['u.type'=>1,'u.delete_time'=>0])
             ->order('u.create_time desc')
@@ -47,9 +48,91 @@ class User extends AdminBaseController
         ]);
         return $this->fetch();
     }
+
+    /**
+     * 用户添加页面
+     * @return mixed
+     */
     public function add(){
         $classList = Db::name('class')->where('delete_time',0)->select();
         $this->assign('classList',$classList);
         return $this->fetch();
+    }
+
+    /**
+     * 用户添加提交
+     */
+    public function addPost(){
+        if(!$this->request->isPost()){
+            $this->error('请求失败');
+        }
+        $post = $this->request->post();
+        if($post['student_id']==''){
+            $this->error('学号不能为空');
+        }
+        if($post['name']==''){
+            $this->error('姓名不能为空');
+        }
+        $model = new UserModel();
+        $result = $model->doAdd($post);//添加
+
+        if($result['code']==1){
+            $this->success($result['msg']);
+        }else{
+            $this->error($result['msg']);
+        }
+    }
+    /**
+     * 用户修改页面
+     * @return mixed
+     */
+    public function edit(){
+        $id = $this->request->param('id');
+        //获取用户详情
+        $model = new UserModel();
+        $data = $model->getDetail($id);
+        //加载专业班级选择框列表信息
+        $classList = Db::name('class')->where(['delete_time'=>0])->select();
+        $this->assign('classList',$classList);
+        $this->assign($data);
+        return $this->fetch();
+    }
+
+    /**
+     * 修改提交
+     */
+    public function editPost(){
+        if(!$this->request->isPost()){
+            $this->error('请求失败');
+        }
+        $post = $this->request->post();
+
+        $model = new UserModel();
+        $result = $model->doEdit($post);//添加
+
+        if($result['code']==1){
+            $this->success($result['msg']);
+        }else{
+            $this->error($result['msg']);
+        }
+    }
+
+    /**
+     * 删除用户
+     */
+    public function delete(){
+        if(!$this->request->isPost()){
+            $this->error('请求失败');
+        }
+        $id = $this->request->post('id');
+
+        $model = new UserModel();
+        $result = $model->doDelete($id);//删除
+
+        if($result['code']==1){
+            $this->success($result['msg']);
+        }else{
+            $this->error($result['msg']);
+        }
     }
 }

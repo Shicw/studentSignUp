@@ -21,17 +21,8 @@
                     <input type="text" name="student_id">
                     <label>姓名</label>
                     <input type="text" name="name">
-                    <label>性别</label>
-                    <div class="am-form-group">
-                        <label class="am-radio-inline">
-                            <input type="radio" value="1" name="sex"> 男
-                        </label>
-                        <label class="am-radio-inline">
-                            <input type="radio" value="2" name="sex"> 女
-                        </label>
-                    </div>
                     <div class="am-cf">
-                        <a class="am-btn am-btn-primary am-btn-sm am-fl ajax-submit" href="javascript:;">提交</a>
+                        <a class="am-btn am-btn-primary am-btn-sm am-fl ajax-submit" href="javascript:;">添加</a>
                     </div>
                 </form>
             </div>
@@ -43,12 +34,5 @@
 </div>
 <a href="#" class="am-icon-btn am-icon-th-list am-show-sm-only admin-menu" data-am-offcanvas="{target: '#admin-offcanvas'}"></a>
 <script src="__STATIC__/js/ajax_form.js"></script>
-<script>
-    $(function(){
-        $("#add").on("click",function(){
-            $('#addModal').modal();
-        });
-    });
-</script>
 </body>
 </html>

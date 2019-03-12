@@ -1,0 +1,53 @@
+{include file="public/head" /}
+<link rel="stylesheet" href="__STATIC__/datetimepicker/css/amazeui.datetimepicker.css"/>
+<script src="__STATIC__/datetimepicker/js/amazeui.datetimepicker.min.js"></script>
+</head>
+<body>
+{include file="public/top" /}
+<div class="am-cf admin-main">
+    {include file="public/nav" /}
+    <div class="admin-content">
+        <div class="admin-content-body">
+            <div class="am-cf am-padding">
+                <div class="am-fl am-cf">
+                    <strong class="am-text-primary am-text-lg">新建报名项目</strong>
+                </div>
+            </div>
+            <div class="am-u-md-6">
+                <form method="post" class="am-form" action="/admin/Signup/addPost">
+                    <label>报名项目名称</label>
+                    <input type="text" name="name">
+                    <label>描述</label>
+                    <input type="text" name="description">
+                    <label>报名人数上限</label>
+                    <input type="number" name="max_student_count" placeholder="若不限制请填0">
+                    <label>报名开始时间</label>
+                    <input type="text" name="begin_time" class="am-form-field" id="begin_time" readonly>
+                    <label>报名结束时间</label>
+                    <input type="text" name="end_time" class="am-form-field" id="end_time" readonly>
+                    <div class="am-cf">
+                        <a class="am-btn am-btn-primary am-btn-sm am-fl ajax-submit" href="javascript:;">添加</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<a href="#" class="am-icon-btn am-icon-th-list am-show-sm-only admin-menu" data-am-offcanvas="{target: '#admin-offcanvas'}"></a>
+<script src="__STATIC__/js/ajax_form.js"></script>
+<script>
+    $(function(){
+        $("#begin_time").datetimepicker({
+            format: 'yyyy-mm-dd hh:ii',
+            autoclose: true
+
+        });
+        $("#end_time").datetimepicker({
+            format: 'yyyy-mm-dd hh:ii',
+            autoclose: true
+        });
+    })
+</script>
+</body>
+</html>

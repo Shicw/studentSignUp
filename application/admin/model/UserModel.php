@@ -23,9 +23,6 @@ class UserModel extends Model
             ->find();
         if ($find) {
             $find = $find->toArray();
-            if($find['status']===0){
-                return ['code' => 0, 'msg' => '您的账号已被禁止登录,请联系管理员'];
-            }
             session($type, $find);//保存session
             //更新最后登录时间
             $this->where('id', $find['id'])->update(['last_login_time' => time()]);
@@ -72,15 +69,12 @@ class UserModel extends Model
      */
     public function doAdd($data){
         $result = $this->insert([
-            'id' => $data['id'],
-            'username' => $data['id'],
-            'password' => md5('123456'),
-            'name' => $data['name'],
-            'sex' => $data['sex'],
-            'type' => $data['type'],
-            'mobile' => $data['mobile'],
-            'major_id' => $data['major_id'],
-            'class_id' => $data['class_id'],
+            'student_id' => $data['student_id'],
+            'username' => $data['student_id'],
+            'password' => md5('123456'),//初始密码
+            'sex' => 2,
+            'type' => 1,
+            'status' => 1,
             'create_time' => time()
         ]);
         if ($result) {

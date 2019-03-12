@@ -30,7 +30,7 @@ class Classes extends AdminBaseController
         }
         //获取班级列表
         $rows = Db::name('class')
-            ->where(['delete_time'=>0])
+            ->where(['delete_time'=>0,'id'=>['>',0]])
             ->where($conditions)
             ->paginate(15,false, [
             'query' => [
