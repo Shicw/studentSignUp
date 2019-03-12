@@ -23,10 +23,12 @@
                                 <button type="submit" class="am-btn am-btn-secondary am-btn-xs">搜索</button>
                                 <a href="/admin/Signup/signupLog" class="am-btn am-btn-danger am-btn-xs">重置</a>
                             </div>
+                            <a href="javascript:;" class="am-btn am-btn-danger am-btn-xs"
+                               id="excell" onclick="method5('dataTable')">导出表格</a>
                         </form>
                     </div>
                 </div>
-                <table class="am-table am-table-bordered am-table-radius am-table-striped">
+                <table class="am-table am-table-bordered am-table-radius am-table-striped" id="dataTable">
                     <thead>
                     <tr>
                         <th>项目名称</th>
@@ -42,9 +44,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {php}
-                    $Sex = ['男','女','未设置'];
-                    {/php}
+                    {php}$Sex = ['男','女','未设置'];{/php}
                     {volist name="rows" id="vo"}
                     <tr>
                         <td>{$vo.item_name}</td>
@@ -92,6 +92,90 @@
             });
         });
     }
+    //打印表格
+    var idTmr;
+
+    function getExplorer() {
+        var explorer = window.navigator.userAgent;
+        //ie
+        if(explorer.indexOf("MSIE") >= 0) {
+            return 'ie';
+        }
+        //firefox
+        else if(explorer.indexOf("Firefox") >= 0) {
+            return 'Firefox';
+        }
+        //Chrome
+        else if(explorer.indexOf("Chrome") >= 0) {
+            return 'Chrome';
+        }
+        //Opera
+        else if(explorer.indexOf("Opera") >= 0) {
+            return 'Opera';
+        }
+        //Safari
+        else if(explorer.indexOf("Safari") >= 0) {
+            return 'Safari';
+        }
+    }
+
+    function method5(tableid) {
+        if(getExplorer() == 'ie') {
+            var curTbl = document.getElementById(tableid);
+            var oXL = new ActiveXObject("Excel.Application");
+            var oWB = oXL.Workbooks.Add();
+            var xlsheet = oWB.Worksheets(1);
+            var sel = document.body.createTextRange();
+            sel.moveToElementText(curTbl);
+            sel.select();
+            sel.execCommand("Copy");
+            xlsheet.Paste();
+            oXL.Visible = true;
+
+            try {
+                var fname = oXL.Application.GetSaveAsFilename("Excel.xls",
+                    "Excel Spreadsheets (*.xls), *.xls");
+            } catch(e) {
+                print("Nested catch caught " + e);
+            } finally {
+                oWB.SaveAs(fname);
+                oWB.Close(savechanges = false);
+                oXL.Quit();
+                oXL = null;
+                idTmr = window.setInterval("Cleanup();", 1);
+            }
+
+        } else {
+            tableToExcel(tableid)
+        }
+    }
+
+    function Cleanup() {
+        window.clearInterval(idTmr);
+        CollectGarbage();
+    }
+    var tableToExcel = (function() {
+        var uri = 'data:application/vnd.ms-excel;base64,',
+            template = '<html><head><meta charset="UTF-8"></head><body><table  border="1">{table}</table></body></html>',
+            base64 = function(
+                s) {
+                return window.btoa(unescape(encodeURIComponent(s)))
+            },
+            format = function(s, c) {
+                return s.replace(/{(\w+)}/g, function(m, p) {
+                    return c[p];
+                })
+            }
+        return function(table, name) {
+            if(!table.nodeType)
+                table = document.getElementById(table)
+            var ctx = {
+                worksheet: name || 'Worksheet',
+                table: table.innerHTML
+            }
+            window.location.href = uri + base64(format(template, ctx))
+        }
+    })()
 </script>
 </body>
 </html>
