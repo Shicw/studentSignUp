@@ -30,7 +30,7 @@ class User extends AdminBaseController
         }
         $rows = Db::name('user u')
             ->field(['u.*',"FROM_UNIXTIME(u.create_time,'%Y-%m-%d %H:%i:%s') create_time",'c.name class',
-                "IF(u.last_login_time>0, FROM_UNIXTIME(u.last_login_time,'%Y-%m-%d %H:%i:%s'), '无') last_login_time"
+                "FROM_UNIXTIME(u.birthday,'%Y-%m-%d') birthday"
             ])
             ->join('class c','c.id=u.class_id')
             ->where($conditions)

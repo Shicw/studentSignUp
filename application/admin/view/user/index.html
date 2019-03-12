@@ -34,7 +34,6 @@
                     <thead>
                     <tr>
                         <th>ID</th>
-                        <th>用户名</th>
                         <th>学号</th>
                         <th>姓名</th>
                         <th>性别</th>
@@ -44,7 +43,6 @@
                         <th>身份证号</th>
                         <th>出生日期</th>
                         <th>照片</th>
-                        <th>最后登录时间</th>
                         <th>操作</th>
                     </tr>
                     </thead>
@@ -55,7 +53,6 @@
                     {volist name="rows" id="vo"}
                     <tr>
                         <td>{$vo.id}</td>
-                        <td>{$vo.username}</td>
                         <td>{$vo.student_id}</td>
                         <td>{$vo.name}</td>
                         <td>{$Sex[$vo.sex]}</td>
@@ -64,8 +61,11 @@
                         <td>{$vo.class}</td>
                         <td>{$vo.id_card}</td>
                         <td>{$vo.birthday}</td>
-                        <td>{$vo.photo}</td>
-                        <td>{$vo.last_login_time}</td>
+                        <td>
+                            <a href="javascript:;" onclick="showPhoto('{$vo.photo}')">
+                                <img src="{$vo.photo}" width="30" height="30" title="点击查看大图">
+                            </a>
+                        </td>
                         <td>
                             <div class="am-btn-toolbar">
                                 <div class="am-btn-group am-btn-group-xs">
@@ -101,7 +101,25 @@
             });
         });
     }
-
+    function showPhoto(url) {
+        console.log(url);
+        layer.photos({
+            photos: {
+                "title": "", //相册标题
+                "id": 123, //相册id
+                "start": 0, //初始显示的图片序号，默认0
+                "data": [   //相册包含的图片，数组格式
+                    {
+                        "alt": "图片",
+                        "pid": 1, //图片id
+                        "src": url, //原图地址
+                        "thumb": "" //缩略图地址
+                    }
+                ]
+            }
+            ,anim: 5
+        });
+    }
 </script>
 </body>
 </html>

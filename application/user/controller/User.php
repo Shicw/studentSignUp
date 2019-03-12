@@ -61,16 +61,8 @@ class User extends UserBaseController
         if ($info) {
             //获取保存的图片文件名
             $fileName = '/upload/photo/'.$info->getSaveName();
-            //将照片写入表
-            $result = Db::name('user')->where('id',$user['id'])->update(['photo'=>$fileName]);
-            if ($result){
-                //更新session中的用户照片信息
-                $user['photo'] = $fileName;
-                session('user', $user);
-                $this->success('照片上传成功','',$fileName);
-            }else{
-                $this->error('照片上传失败');
-            }
+            $fileName = str_replace('\\','/',$fileName);
+            $this->success('照片上传成功','',$fileName);
         } else {
             // 上传失败获取错误信息
             $this->error($file->getError());
