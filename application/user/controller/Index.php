@@ -14,8 +14,18 @@ class Index extends UserBaseController
     public function index(){
         //获取登录用户信息
         $user = getUser();
-
+        //根据班级id获取专业班级
+        $user['class'] = Db::name('class')->where('id',$user['class_id'])->value('name');
         $this->assign($user);
+
+        $time = time();
+        //获取正在进行中的报名项目
+        $items = Db::name('signup_items')
+            ->field(['name','id'])
+            ->where(['delete_time'=>0,'begin_time'=>['<',$time],'end_time'=>['>',$time]])
+            ->limit(4)
+            ->select();
+        $this->assign(['items'=>$items]);
         return $this->fetch();
     }
     /**

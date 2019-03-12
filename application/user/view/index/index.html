@@ -1,55 +1,58 @@
 {include file="public/head" /}
-<link rel="stylesheet" href="__STATIC__/datetimepicker/css/amazeui.datetimepicker.css"/>
 <style>
-  .am-panel{margin-top: 1%}
-  .am-panel button{float: right}
-  #Modal{height: 350px}
+    .am-panel {
+        margin-top: 1%
+    }
+
+    .am-panel button {
+        float: right
+    }
+
+    #Modal {
+        height: 350px
+    }
 </style>
 </head>
 <body>
 {include file="public/top" /}
 <div class="am-cf admin-main">
-  {include file="public/nav" /}
-
-  <!-- content start -->
-  <div class="admin-content">
-    <div class="admin-content-body">
-      <div class="am-cf am-padding">
-        <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">个人信息</strong></div><br>
-        <div class="am-panel am-panel-default">
-          <div class="am-panel-bd">
-            {eq name="$type" value="1"}
-            <label>学号:</label>
-            <span>{$id}</span><br>
-            <label>姓名:</label>
-            <span>{$name}</span><br>
-            <label>手机:</label>
-            <span>{$mobile}</span><br>
-            <label>专业班级:</label>
-            <span>{$major}-{$class}</span>
-            {else\}
-            <label>工号:</label>
-            <span>{$id}</span><br>
-            <label>姓名:</label>
-            <span>{$name}</span><br>
-            <label>手机:</label>
-            <span>{$mobile}</span><br>
-            {/eq}
-          </div>
+    {include file="public/nav" /}
+    <div class="admin-content">
+        <div class="admin-content-body">
+            <div class="am-cf am-padding am-u-md-6">
+                <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">进行中</strong></div>
+                <br>
+                {volist name="items" id="vo"}
+                <div class="am-panel am-panel-default" style="margin-bottom: 5px">
+                    <div class="am-panel-bd" style="padding: 5px 15px"><span>{$vo.name}</span>
+                        <a href="{:url('user/Signup/detail',['id'=>$vo['id']])}"
+                           style="float: right" >>>查看详情</a>
+                    </div>
+                </div>
+                {/volist}
+            </div>
+            <div class="am-cf am-padding am-u-md-6">
+                <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">个人信息</strong></div>
+                <br>
+                <div class="am-panel am-panel-default">
+                    <div class="am-panel-bd">
+                        <label>学号:</label>
+                        <span>{$username}</span><br>
+                        <label>姓名:</label>
+                        <span>{$name}</span><br>
+                        <label>手机:</label>
+                        <span>{$mobile}</span><br>
+                        <label>专业班级:</label>
+                        <span>{$class}</span>
+                        <a href="{:url('user/User/info',['id'=>$id])}"
+                           style="float: right" class="am-btn am-btn-primary am-btn-xs">修改信息</a>
+                    </div>
+                </div>
+            </div>
         </div>
-        <hr>
-      </div>
     </div>
-  </div>
-  <!-- content end -->
 </div>
-
-<a href="#" class="am-icon-btn am-icon-th-list am-show-sm-only admin-menu" data-am-offcanvas="{target: '#admin-offcanvas'}"></a>
-<script src="__STATIC__/datetimepicker/js/amazeui.datetimepicker.min.js"></script>
-<script>
-    $(function(){
-
-    });
-</script>
+<a href="#" class="am-icon-btn am-icon-th-list am-show-sm-only admin-menu"
+   data-am-offcanvas="{target: '#admin-offcanvas'}"></a>
 </body>
 </html>

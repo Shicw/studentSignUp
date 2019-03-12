@@ -108,6 +108,7 @@ class User extends AdminBaseController
         $post = $this->request->post();
 
         $model = new UserModel();
+        $post['birthday'] = strtotime($post['birthday']);
         $result = $model->doEdit($post);//添加
 
         if($result['code']==1){

@@ -34,11 +34,3 @@ function getUser(){
         return false;
     }
 }
-//记录操作日志
-function addLog($action,$userId){
-    \think\Db::name('log')->insert([
-        'action'=>$action,
-        'user_id'=>$userId,
-        'create_time'=>time()
-    ]);
-}

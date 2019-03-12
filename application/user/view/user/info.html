@@ -1,0 +1,128 @@
+{include file="public/head" /}
+</head>
+<body>
+{include file="public/top" /}
+<div class="am-cf admin-main">
+    {include file="public/nav" /}
+    <div class="admin-content">
+        <div class="admin-content-body">
+            <div class="am-cf am-padding">
+                <div class="am-fl am-cf">
+                    <strong class="am-text-primary am-text-lg">个人信息</strong>
+                </a>
+                </div>
+            </div>
+            <form method="post" class="am-form" action="/user/User/editPost">
+                <div class="am-u-md-6">
+                    <label>学号</label>
+                    <input type="text" name="username" value="{$username}">
+                    <label>姓名</label>
+                    <input type="text" name="name" value="{$name}">
+                    <label>手机</label>
+                    <input type="text" name="mobile" value="{$mobile}">
+                    <label>邮箱</label>
+                    <input type="text" name="email" value="{$email}">
+                    <label>性别</label>
+                    <div class="am-form-group">
+                        {php}$sexArray = ['男','女','未设置'];{/php}
+                        {foreach name="$sexArray" item="vo"}
+                        {php}$checked = $key==$sex ? 'checked' : '';{/php}
+                        <label class="am-radio-inline">
+                            <input type="radio" value="{$key}" name="sex" {$checked}> {$vo}
+                        </label>
+                        {/foreach}
+                    </div>
+                    <label>专业班级</label>
+                    <select name="class_id">
+                        <option value="" hidden>请选班级</option>
+                        {volist name="classList" id="vo"}
+
+                        {php}$selected = $vo['id']==$class_id ? 'selected' : '';{/php}
+                        <option value="{$vo.id}" {$selected}>{$vo.name}</option>
+                        {/volist}
+                    </select>
+                </div>
+                <div class="am-u-md-6">
+                    <label>出生日期</label>
+                    {php}$birthday = $birthday==0 ? '未设置' : date('Y-m-d',$birthday);{/php}
+                    <input type="text" name="birthday" class="am-form-field" data-am-datepicker="{format: 'yyyy-mm-dd', viewMode: 'years'}"
+                           data-am-datepicker value="{$birthday}" readonly>
+                    <label>身份证号</label>
+                    <input type="text" name="id_card" value="{$id_card}">
+                    <label>照片</label><br>
+                    <input type="hidden" name="photo" value="{$photo}">
+                    {eq name="$photo" value=""}
+                    <img class="am-circle img" src="/upload/photo/headicon.png" width="140" height="140"/>
+                    {else/}
+                    <img class="am-circle img" src="{$photo}" width="140" height="140"/>
+                    {/eq}
+
+                    <div class="am-form-group am-form-file" style="margin:10px 0">
+                        <button type="button" class="am-btn am-btn-danger am-btn-sm" >
+                            <i class="am-icon-cloud-upload"></i> 选择要上传的照片</button>
+                        <label style="color: red" hidden id="warning">图片大小超过限制！</label>
+                        <input id="photo" type="file" accept="image/png, image/jpeg, image/jpg">
+                    </div>
+                </div>
+                <div class="am-u-md-6" style="margin-top: 15px">
+                    <input type="hidden" name="id" value="{$id}">
+                    <a class="am-btn am-btn-primary am-btn-sm am-fl ajax-submit" href="javascript:;">保存</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+<a href="#" class="am-icon-btn am-icon-th-list am-show-sm-only admin-menu"
+   data-am-offcanvas="{target: '#admin-offcanvas'}"></a>
+<script src="__STATIC__/js/ajax_form.js"></script>
+<script>
+    //当选择图片input值变化,且大小小于0.5M才能点击确认按钮
+    $('#photo').change(function () {
+        //获取当前上传图片
+        var imgData = this.files[0];
+        //获取图片的大小
+        var imgSize = imgData.size;
+        if(imgSize>524288) {
+            layer.msg('图片最大0.5M',{time:1500,icon:5});
+            return false;
+        }
+        //新建一个文件读取对象
+        var imgRead = new FileReader();
+        //要读取的文件对象
+        imgRead.readAsDataURL(imgData);
+        //当读取成功时，创建image对象，将读取到的图片信息放入src
+        imgRead.onload = function() {
+            var aImage = new Image();
+            aImage.src = this.result;
+            $('.img').attr('src',aImage.src);
+        };
+        photoPost();
+    });
+    //上传照片ajax
+    function photoPost() {
+        var file = $('#photo')[0].files;
+        //将图片信息放入formData，然后再通过ajax传递给PHP
+        var avatar = new FormData();
+        avatar.append('photo', file[0]);
+        //console.log(avatar);
+        $.ajax({
+            type: "post",
+            dataType: "json",
+            data:avatar,
+            url: "/user/User/photoPost",
+            cache: false,//上传文件无需缓存
+            processData: false,//用于对data参数进行序列化处理 这里必须false
+            contentType: false, //必须
+            success: function (result) {
+                if(result.code===1){
+                    $("input[name='photo']").val(result.data);
+                }else{
+                    layer.msg(result.msg,{time:1000});
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>
