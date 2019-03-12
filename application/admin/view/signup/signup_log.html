@@ -10,56 +10,56 @@
     <div class="admin-content">
         <div class="admin-content-body">
             <div class="am-cf am-padding">
-                <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">报名项目管理</strong> / <small>报名项目列表</small></div>
+                <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">报名信息查看</strong></div>
 
             </div>
 
             <div class="am-u-md-12">
                 <div class="am-btn-toolbar">
-                    <div class="am-btn-group am-btn-group-xs">
-                        <a href="/admin/Signup/add" class="am-btn am-btn-primary">添加</a>
-                    </div>
                     <div class="am-u-sm-12 am-u-md-6">
-                        <form method="post" action="/admin/Signup/index">
+                        <form method="post" action="/admin/Signup/signupLog">
                             <div class="am-form-group">
-                                <input type="text" name="keyword" value="{:input('request.keyword')}" placeholder="按名称搜索">
+                                <input type="text" name="keyword" value="{:input('request.keyword')}" placeholder="按项目,学号,姓名搜索">
                                 <button type="submit" class="am-btn am-btn-secondary am-btn-xs">搜索</button>
-                                <a href="/admin/Signup/index" class="am-btn am-btn-danger am-btn-xs">重置</a>
+                                <a href="/admin/Signup/signupLog" class="am-btn am-btn-danger am-btn-xs">重置</a>
                             </div>
                         </form>
                     </div>
                 </div>
-
                 <table class="am-table am-table-bordered am-table-radius am-table-striped">
                     <thead>
                     <tr>
-                        <th>ID</th>
                         <th>项目名称</th>
-                        <th>描述</th>
-                        <th>报名人数上限</th>
-                        <th>实际报名人数</th>
-                        <th>报名开始时间</th>
-                        <th>报名结束时间</th>
-                        <th>创建时间</th>
+                        <th>姓名</th>
+                        <th>学号</th>
+                        <th>专业班级</th>
+                        <th>性别</th>
+                        <th>手机</th>
+                        <th>身份证号</th>
+                        <th>出生日期</th>
+                        <th>报名时间</th>
                         <th>操作</th>
                     </tr>
                     </thead>
                     <tbody>
+                    {php}
+                    $Sex = ['男','女','未设置'];
+                    {/php}
                     {volist name="rows" id="vo"}
                     <tr>
-                        <td>{$vo.id}</td>
+                        <td>{$vo.item_name}</td>
                         <td>{$vo.name}</td>
-                        <td>{$vo.description}</td>
-                        <td>{$vo.max_student_count}</td>
-                        <td>{$vo.real_student_count}</td>
-                        <td>{$vo.begin_time}</td>
-                        <td>{$vo.end_time}</td>
+                        <td>{$vo.student_id}</td>
+                        <td>{$vo.class}</td>
+                        <td>{$Sex[$vo.sex]}</td>
+                        <td>{$vo.mobile}</td>
+                        <td>{$vo.id_card}</td>
+                        <td>{$vo.birthday}</td>
                         <td>{$vo.create_time}</td>
                         <td>
                             <div class="am-btn-toolbar">
                                 <div class="am-btn-group am-btn-group-xs">
-                                    <a href="{:url('admin/Signup/edit',['id'=>$vo['id']])}" class="am-btn am-btn-success" style="color: #fff;">编辑</a>
-                                    <button type="button" class="am-btn am-btn-danger" onclick="del(this,{$vo.id})">删除</button>
+                                    <button type="button" class="am-btn am-btn-danger" onclick="del(this,{$vo.id})">移除</button>
                                 </div>
                             </div>
                         </td>
@@ -67,7 +67,6 @@
                     {/volist}
                     </tbody>
                 </table>
-                <span>共{$rows->total()}条记录</span>
                 <div class="pagination" style="float: right">{$page}</div>
             </div>
         </div>
@@ -78,18 +77,21 @@
 <a href="#" class="am-icon-btn am-icon-th-list am-show-sm-only admin-menu" data-am-offcanvas="{target: '#admin-offcanvas'}"></a>
 <script>
     function del(self,id) {
-        layer.confirm('确认要删除吗?', function (index) {
-            $.post("{:url('admin/Signup/delete')}", {id: id}, function (res) {
+        layer.confirm('确认要移除吗?', function (index) {
+            $.post("{:url('admin/Signup/quit')}", {id: id}, function (res) {
                 if (res.code == 1) {
                     $(self).closest("tr").remove();//前端删除
                     layer.msg(res.msg, {time: 1500, icon: 6});
+                    var keyword = $("input[name='keyword']").val();
+                    setTimeout(function () {
+                        window.location.href = '/admin/signup/signupLog/keyword/'+keyword;
+                    },1000);
                 } else {
                     layer.msg(res.msg, {time: 1500, icon: 5});
                 }
             });
         });
     }
-
 </script>
 </body>
 </html>

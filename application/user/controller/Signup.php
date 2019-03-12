@@ -54,4 +54,29 @@ class Signup extends UserBaseController
             $this->error($result['msg']);
         }
     }
+    /**
+     * 查看我的报名记录
+     */
+    public function myRecord(){
+        $rows = Db::name('student_signup_log')->alias('ssl')
+            ->field([
+                "FROM_UNIXTIME(si.begin_time,'%Y-%m-%d %H:%i:%s') begin_time",
+                "FROM_UNIXTIME(si.end_time,'%Y-%m-%d %H:%i:%s') end_time",
+                'si.id','si.name','si.description','si.max_student_count','si.real_student_count'
+            ])
+            ->join([
+                ['signup_items si','si.id=ssl.items_id'],
+            ])
+            ->where(['ssl.delete_time'=>0,'ssl.user_id'=>getUserId()])
+            ->order('ssl.create_time desc')
+            ->paginate(15,false);
+        $page = $rows->render();
+        $name = getUser()['name'];
+        $this->assign([
+            'rows' => $rows,
+            'page' => $page,
+            'name' => $name
+        ]);
+        return $this->fetch();
+    }
 }

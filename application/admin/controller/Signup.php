@@ -8,6 +8,7 @@
 namespace app\admin\controller;
 
 use app\admin\model\SignupModel;
+use app\admin\model\StudentSignupModel;
 use app\AdminBaseController;
 use think\Controller;
 use think\Db;
@@ -107,7 +108,7 @@ class Signup extends AdminBaseController
         }
     }
     /**
-     * 删除班级
+     * 删除
      */
     public function delete(){
         if(!$this->request->isPost()){
@@ -124,4 +125,62 @@ class Signup extends AdminBaseController
             $this->error($result['msg']);
         }
     }
+
+    /**
+     * 查看已报名情况
+     */
+    public function signupLog(){
+        //关键字查询
+        $request = input('request.');
+        $keyword = '';
+        $conditions = [];
+        if (!empty($request['keyword'])) {
+            $keyword = $request['keyword'];
+
+            $conditions['si.name|u.student_id|u.name'] = ['like', "%$keyword%"];
+        }
+        $rows = Db::name('student_signup_log')->alias('ssl')
+            ->field([
+                "FROM_UNIXTIME(ssl.create_time,'%Y-%m-%d %H:%i:%s') create_time",
+                "FROM_UNIXTIME(u.birthday,'%Y-%m-%d') birthday", 'c.name class',
+                'si.name item_name','u.student_id','u.name','u.sex','u.mobile','u.id_card','ssl.id'
+            ])
+            ->join([
+                ['signup_items si','si.id=ssl.items_id'],
+                ['user u','u.id=ssl.user_id'],
+                ['class c','c.id=u.class_id']
+            ])
+            ->where($conditions)
+            ->where(['ssl.delete_time'=>0,'ssl.user_id'=>getUserId()])
+            ->order('ssl.create_time desc')
+            ->paginate(15,false, [
+                'query' => [
+                    'keyword' => $keyword,
+                ]
+            ]);
+        $page = $rows->render();
+        $name = getUser()['name'];
+        $this->assign([
+            'rows' => $rows,
+            'page' => $page,
+            'name' => $name
+        ]);
+        return $this->fetch();
+    }
+    /**
+     * 移除报名记录
+     */
+    public function quit(){
+        $id = $this->request->param('id');
+        $model = new StudentSignupModel();
+        $result = $model->doQuit($id);
+
+        if($result['code']==1){
+            $this->success($result['msg']);
+        }else{
+            $this->error($result['msg']);
+        }
+    }
+
+
 }

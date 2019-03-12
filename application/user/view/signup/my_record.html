@@ -1,10 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+{include file="public/head" /}
+<style>input[name='keyword']{width: 210px}</style>
 </head>
 <body>
+{include file="public/top" /}
+<div class="am-cf admin-main">
+    {include file="public/nav" /}
 
+    <!-- content start -->
+    <div class="admin-content">
+        <div class="admin-content-body">
+            <div class="am-cf am-padding">
+                <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">我的报名</strong></div>
+
+            </div>
+
+            <div class="am-u-md-12">
+                <table class="am-table am-table-bd am-table-striped admin-content-table">
+                    <thead>
+                    <tr>
+                        <th>项目名称</th>
+                        <th>描述</th>
+                        <th>报名人数上限</th>
+                        <th>实际报名人数</th>
+                        <th>报名开始时间</th>
+                        <th>报名结束时间</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {volist name="rows" id="vo"}
+                    <tr>
+                        <td>{$vo.name}</td>
+                        <td>{$vo.description}</td>
+                        <td>
+                            {eq name="$vo.max_student_count" value="0"}
+                            不限制
+                            {else/}
+                            {$vo.max_student_count}
+                            {/eq}
+
+                        </td>
+                        <td>{$vo.real_student_count}</td>
+                        <td>{$vo.begin_time}</td>
+                        <td>{$vo.end_time}</td>
+                    </tr>
+                    {/volist}
+                    </tbody>
+                </table>
+                <div class="pagination" style="float: right">{$page}</div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- content end -->
+</div>
+<a href="#" class="am-icon-btn am-icon-th-list am-show-sm-only admin-menu" data-am-offcanvas="{target: '#admin-offcanvas'}"></a>
+<script>
+
+</script>
 </body>
 </html>

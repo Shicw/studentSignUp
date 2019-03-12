@@ -56,4 +56,36 @@ class StudentSignupModel extends Model
         return ['code' => 1, 'msg' =>'报名成功'];
     }
 
+    /**
+     * admin执行报名移除操作
+     * @param $id
+     * @return array
+     */
+    public function doQuit($id){
+        //先判断该报名记录是否存在
+        $found = $this->name('student_signup_log')->where(['id' => $id, 'delete_time' => 0])->find();
+        if (!$found) {
+            return ['code' => 0, 'msg' => '无该报名记录,请刷新'];
+        }
+        //开启事务处理
+        $this->startTrans();
+        try {
+            //删除报名记录
+            $result = $this->name('student_signup_log')->where(['id' => $id])->update(['delete_time'=>time()]);
+            if (!$result) {
+                throw new Exception("移除失败,请重试");
+            }
+            //实际报名人数-1
+            $result = $this->name('signup_items')->where('id',$found['items_id'])->setDec('real_student_count',1);
+            if (!$result) {
+                throw new Exception("移除失败,请重试");
+            }
+            $this->commit();// 提交事务
+        } catch (Exception $e) {
+            $this->rollback();// 回滚事务
+            return ['code' => 0, 'msg' => $e->getMessage()];
+        }
+        return ['code' => 1, 'msg' => '移除成功'];
+    }
+
 }
