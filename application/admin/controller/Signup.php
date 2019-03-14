@@ -137,18 +137,17 @@ class Signup extends AdminBaseController
         if (!empty($request['keyword'])) {
             $keyword = $request['keyword'];
 
-            $conditions['si.name|u.student_id|u.name'] = ['like', "%$keyword%"];
+            $conditions['si.name|u.name'] = ['like', "%$keyword%"];
         }
         $rows = Db::name('student_signup_log')->alias('ssl')
             ->field([
                 "FROM_UNIXTIME(ssl.create_time,'%Y-%m-%d %H:%i:%s') create_time",
-                "FROM_UNIXTIME(u.birthday,'%Y-%m-%d') birthday", 'c.name class',
-                'si.name item_name','u.student_id','u.name','u.sex','u.mobile','u.id_card','ssl.id'
+                "FROM_UNIXTIME(u.birthday,'%Y-%m-%d') birthday",'u.id_card','ssl.id',
+                'si.name item_name','u.username','u.name','u.sex','u.mobile'
             ])
             ->join([
                 ['signup_items si','si.id=ssl.items_id'],
                 ['user u','u.id=ssl.user_id'],
-                ['class c','c.id=u.class_id']
             ])
             ->where($conditions)
             ->where(['ssl.delete_time'=>0,'ssl.user_id'=>getUserId()])

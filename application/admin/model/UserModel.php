@@ -15,17 +15,18 @@ class UserModel extends Model
      * 验证用户名密码
      * @param $username
      * @param $password
+     * @param $ip
      * @param $type
      * @return array
      */
-    public function doLogin($username, $password, $type){
+    public function doLogin($username, $password, $type, $ip){
         $find = $this->where(['username' => $username, 'password' => md5($password)])
             ->find();
         if ($find) {
             $find = $find->toArray();
             session($type, $find);//保存session
             //更新最后登录时间
-            $this->where('id', $find['id'])->update(['last_login_time' => time()]);
+            $this->where('id', $find['id'])->update(['last_login_time' => time(),'last_login_ip'=>$ip]);
             return ['code' => 1, 'msg' => '登录成功', 'data' => $find];
         } else {
             return ['code' => 0, 'msg' => '用户名或密码错误'];
@@ -69,12 +70,11 @@ class UserModel extends Model
      */
     public function doAdd($data){
         $result = $this->insert([
-            'student_id' => $data['student_id'],
-            'username' => $data['student_id'],
+            'username' => $data['username'],
             'password' => md5('123456'),//初始密码
+            'name' => $data['name'],
             'sex' => 2,
             'type' => 1,
-            'status' => 1,
             'create_time' => time()
         ]);
         if ($result) {
@@ -115,6 +115,25 @@ class UserModel extends Model
             return ['code' => 1, 'msg' => '修改成功'];
         } else {
             return ['code' => 0, 'msg' => '没有新的修改信息'];
+        }
+    }
+    /**
+     * 注册用户
+     * @param $data
+     * @return array
+     */
+    public function doRegister($data){
+        $result = $this->insert([
+            'username' => $data['username'],
+            'password' => md5($data['password']),
+            'sex' => 2,
+            'type' => 1,
+            'create_time' => time()
+        ]);
+        if ($result) {
+            return ['code' => 1, 'msg' => '注册成功'];
+        } else {
+            return ['code' => 0, 'msg' => '注册失败'];
         }
     }
 }

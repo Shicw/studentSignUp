@@ -14,7 +14,30 @@ use think\Db;
 class Index extends AdminBaseController
 {
     public function index(){
+        $time = time();
+        $todayBegin = strtotime(date('Y-m-d',time()));
+        //获取用户数量
+        $userCount = Db::name('user')
+            ->where(['delete_time'=>0,'type'=>1])
+            ->count();
+        //今日报名项目数量
+        $itemsCount = Db::name('signup_items')
+            ->where(['delete_time'=>0,'begin_time'=>['<',$time],'end_time'=>['>',$time]])
+            ->count();
+        //今日报名人数
+        $signupLogCount = Db::name('student_signup_log')
+            ->where(['delete_time'=>0,'create_time'=>['between',[$todayBegin,$todayBegin+86400]]])
+            ->count();
 
+        $loginLog = Db::name('user')->where(['delete_time'=>0])
+            ->order('last_login_time desc')
+            ->limit(5)->select();
+        $this->assign([
+            'userCount'=>$userCount,
+            'itemsCount'=>$itemsCount,
+            'signupLogCount'=>$signupLogCount,
+            'loginLog'=>$loginLog
+        ]);
         return $this->fetch();
     }
     /**

@@ -1,32 +1,95 @@
 {include file="public/head" /}
-<link rel="stylesheet" href="__STATIC__/datetimepicker/css/amazeui.datetimepicker.css"/>
 <style>
-  .am-panel{margin-top: 1%}
-  .am-panel button{float: right}
-  #Modal{height: 350px}
+    .admin-content-body {
+        margin-top: 20px
+    }
 </style>
 </head>
 <body>
 {include file="public/top" /}
 <div class="am-cf admin-main">
-  {include file="public/nav" /}
-
-  <!-- content start -->
-  <div class="admin-content">
-    <div class="admin-content-body">
-
-
+    {include file="public/nav" /}
+    <!-- content start -->
+    <div class="admin-content">
+        <div class="admin-content-body">
+            <ul class="am-avg-sm-1 am-avg-md-4 am-margin am-padding am-text-center admin-content-list ">
+                <li>
+                    <a href="#" class="am-text-success">
+                        <span class="am-icon-btn am-icon-user"></span><br/>用户数量<br/>{$userCount}
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="am-text-warning">
+                        <span class="am-icon-btn am-icon-sign-in"></span><br/>今日报名人数<br/>{$signupLogCount}
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="am-text-danger">
+                        <span class="am-icon-btn am-icon-reorder"></span><br/>今日报名项目数量<br/>{$itemsCount}
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="am-text-secondary">
+                        <span class="am-icon-btn am-icon-clock-o"></span><br/>系统时间<br/>
+                        <span class="date">年月日</span>
+                        <span class="time">00:00:00</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="am-u-md-12">
+                <table class="am-table">
+                    <thead>
+                    <tr>
+                        <th>用户名</th>
+                        <th>姓名</th>
+                        <th>登录时间</th>
+                        <th>登录ip</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {volist name="loginLog" id="vo"}
+                    <tr>
+                        <td>{$vo.username}</td>
+                        <td>{$vo.name}</td>
+                        <td>{$vo.last_login_time|date="Y-m-d H:i:s",###}</td>
+                        <td>{$vo.last_login_ip}</td>
+                    </tr>
+                    {/volist}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-  </div>
-  <!-- content end -->
+    <!-- content end -->
 </div>
-
-<a href="#" class="am-icon-btn am-icon-th-list am-show-sm-only admin-menu" data-am-offcanvas="{target: '#admin-offcanvas'}"></a>
-<script src="__STATIC__/datetimepicker/js/amazeui.datetimepicker.min.js"></script>
+<a href="#" class="am-icon-btn am-icon-th-list am-show-sm-only admin-menu"
+   data-am-offcanvas="{target: '#admin-offcanvas'}"></a>
 <script>
-    $(function(){
-
+    $(function () {
+        //定时每秒自动获取时间
+        getTime();
+        setInterval("getTime()", 1000);
     });
+
+    //获取系统时间
+    function getTime() {
+        var myDate = new Date();
+        var year = myDate.getFullYear();
+        var month = myDate.getMonth() + 1;
+        var day = myDate.getDate();
+        var h = myDate.getHours();       //获取当前小时数(0-23)
+        var m = myDate.getMinutes();     //获取当前分钟数(0-59)
+        var s = myDate.getSeconds();
+        var date = year + "年" + month + "月" + day + "日";
+        var time = add0(h) + ":" + add0(m) + ":" + add0(s);
+        $(".time").html(time);
+        $(".date").html(date);
+    }
+
+    //时间数字不足两位的补0
+    function add0(num) {
+        return (num > 9) ? num : "0" + num;
+    }
 </script>
 </body>
 </html>

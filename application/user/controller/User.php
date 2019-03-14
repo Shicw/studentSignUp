@@ -18,12 +18,7 @@ class User extends UserBaseController
     public function info(){
         //获取session中登录用户信息
         $user = getUser();
-        //根据班级id获取专业班级
-        $user['class'] = Db::name('class')->where('id',$user['class_id'])->value('name');
         $this->assign($user);
-        //加载专业班级选择框列表信息
-        $classList = Db::name('class')->where(['delete_time'=>0])->select();
-        $this->assign('classList',$classList);
         return $this->fetch();
     }
 

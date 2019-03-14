@@ -18,6 +18,11 @@ class StudentSignupModel extends Model
      * @return array
      */
     public function doSignup($userId,$itemId){
+        //判断用户是否完善信息
+        $idcard = $this->name('user')->where('id',$userId)->value('id_card');
+        if($idcard==''){
+            return ['code' => 0, 'msg' => '请先完善您的个人信息'];
+        }
         //判断是否已报名该项目
         $isExist = $this->name('student_signup_log')
             ->where(['items_id'=>$itemId, 'user_id'=>$userId, 'delete_time'=>0])

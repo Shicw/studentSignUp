@@ -29,10 +29,9 @@ class User extends AdminBaseController
             $conditions['name|mobile|username'] = ['like', "%$keyword%"];
         }
         $rows = Db::name('user u')
-            ->field(['u.*',"FROM_UNIXTIME(u.create_time,'%Y-%m-%d %H:%i:%s') create_time",'c.name class',
+            ->field(['u.*',"FROM_UNIXTIME(u.create_time,'%Y-%m-%d %H:%i:%s') create_time",
                 "FROM_UNIXTIME(u.birthday,'%Y-%m-%d') birthday"
             ])
-            ->join('class c','c.id=u.class_id')
             ->where($conditions)
             ->where(['u.type'=>1,'u.delete_time'=>0])
             ->order('u.create_time desc')
@@ -54,8 +53,6 @@ class User extends AdminBaseController
      * @return mixed
      */
     public function add(){
-        $classList = Db::name('class')->where('delete_time',0)->select();
-        $this->assign('classList',$classList);
         return $this->fetch();
     }
 
@@ -67,8 +64,8 @@ class User extends AdminBaseController
             $this->error('请求失败');
         }
         $post = $this->request->post();
-        if($post['student_id']==''){
-            $this->error('学号不能为空');
+        if($post['username']==''){
+            $this->error('用户名不能为空');
         }
         if($post['name']==''){
             $this->error('姓名不能为空');

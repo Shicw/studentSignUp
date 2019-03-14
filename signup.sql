@@ -1,26 +1,4 @@
-﻿# Host: localhost  (Version 5.5.53)
-# Date: 2019-03-12 11:06:23
-# Generator: MySQL-Front 6.0  (Build 2.20)
-
-
-#
-# Structure for table "class"
-#
-
-CREATE TABLE `class` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
-  `name` varchar(30) NOT NULL DEFAULT '' COMMENT '专业班级名称',
-  `delete_time` int(11) NOT NULL DEFAULT '0' COMMENT '删除时间(时间戳)',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='专业班级表';
-
-#
-# Data for table "class"
-#
-
-INSERT INTO `class` VALUES (0,'未设置',0),(1,'信息工程151',0),(2,'信息工程152',0);
-
-#
+﻿#
 # Structure for table "signup_items"
 #
 
@@ -35,13 +13,7 @@ CREATE TABLE `signup_items` (
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间(时间戳)',
   `delete_time` int(11) NOT NULL DEFAULT '0' COMMENT '删除时间(时间戳)',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='报名项目表';
-
-#
-# Data for table "signup_items"
-#
-
-INSERT INTO `signup_items` VALUES (1,'大学英语四级','大学英语四级',0,0,2019,2019,1552359899,0);
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='报名项目表';
 
 #
 # Structure for table "student_signup_log"
@@ -54,12 +26,7 @@ CREATE TABLE `student_signup_log` (
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间(时间戳)',
   `delete_time` int(11) NOT NULL DEFAULT '0' COMMENT '删除时间(时间戳)',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='学生报名记录表';
-
-#
-# Data for table "student_signup_log"
-#
-
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='学生报名记录表';
 
 #
 # Structure for table "user"
@@ -67,23 +34,22 @@ CREATE TABLE `student_signup_log` (
 
 CREATE TABLE `user` (
   `id` int(5) NOT NULL AUTO_INCREMENT COMMENT 'id',
-  `username` varchar(20) NOT NULL DEFAULT '' COMMENT '用户名(与学生学号相同)',
+  `username` varchar(20) NOT NULL DEFAULT '' COMMENT '用户名',
   `password` varchar(255) NOT NULL DEFAULT '' COMMENT '密码(md5加密)',
-  `student_id` varchar(20) NOT NULL DEFAULT '' COMMENT '学号',
   `type` tinyint(1) NOT NULL DEFAULT '1' COMMENT '类型 0:admin 1:学生',
   `name` varchar(20) NOT NULL DEFAULT '' COMMENT '姓名',
   `sex` tinyint(1) NOT NULL DEFAULT '2' COMMENT '性别0:男1:女2:未设置',
   `birthday` int(11) NOT NULL DEFAULT '0' COMMENT '出生日期',
   `id_card` varchar(20) NOT NULL DEFAULT '' COMMENT '身份证号',
-  `class_id` int(5) NOT NULL DEFAULT '0' COMMENT '专业班级id',
   `photo` varchar(255) NOT NULL DEFAULT '' COMMENT '照片路径',
   `mobile` varchar(11) NOT NULL DEFAULT '' COMMENT '手机号',
   `email` varchar(30) NOT NULL DEFAULT '' COMMENT '邮箱',
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间(时间戳)',
   `last_login_time` int(11) NOT NULL DEFAULT '0' COMMENT '最后一次登录时间(时间戳)',
+  `last_login_ip` varchar(20) NOT NULL DEFAULT '' COMMENT '最后一次登录ip',
   `delete_time` int(11) NOT NULL DEFAULT '0' COMMENT '删除时间(时间戳)',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='用户表';
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='用户表';
 
 #
 # Data for table "user"

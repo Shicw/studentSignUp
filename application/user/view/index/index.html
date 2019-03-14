@@ -24,7 +24,7 @@
                 <br>
                 {volist name="items" id="vo"}
                 <div class="am-panel am-panel-default" style="margin-bottom: 5px">
-                    <div class="am-panel-bd" style="padding: 5px 15px"><span>{$vo.name}</span>
+                    <div class="am-panel-bd" style="padding: 5px 15px"><span>{$vo.name|default=$vo.name}</span>
                     </div>
                 </div>
                 {/volist}
@@ -34,16 +34,18 @@
                 <br>
                 <div class="am-panel am-panel-default">
                     <div class="am-panel-bd">
-                        <label>学号:</label>
+                        <label>用户名:</label>
                         <span>{$username}</span><br>
                         <label>姓名:</label>
                         <span>{$name}</span><br>
                         <label>手机:</label>
                         <span>{$mobile}</span><br>
-                        <label>专业班级:</label>
-                        <span>{$class}</span>
-                        <a href="{:url('user/User/info',['id'=>$id])}"
-                           style="float: right" class="am-btn am-btn-primary am-btn-xs">修改信息</a>
+                        <label>出生日期:</label>
+                        {eq name="$birthday" value="0"}
+                        <span>未完善</span><br>
+                            {else/}
+                        <span>{$birthday|date="Y-m-d",###}</span><br>
+                        {/eq}
                     </div>
                 </div>
             </div>

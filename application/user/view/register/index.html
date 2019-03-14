@@ -25,22 +25,22 @@
 <body>
 <div class="header">
     <div class="am-g">
-        <h1>用户登录</h1>
+        <h1>用户注册</h1>
 
     </div>
 </div>
 <div class="am-g">
     <div class="am-u-lg-6 am-u-md-8 am-u-sm-centered">
-        <form method="post" class="am-form" action="/user/Login/doLogin">
+        <form method="post" class="am-form" action="/user/Register/doRegister">
             <label>用户名</label>
-            <input type="text" name="username" placeholder="请输入用户名">
+            <input type="text" name="username" placeholder="6-20个字符">
             <br>
             <label>密码</label>
-            <input type="password" name="password" placeholder="请输入密码">
+            <input type="password" name="password" placeholder="6-20个字符,仅可包含字母,数字,_和-">
             <br>
             <div class="am-cf">
-                <a class="am-btn am-btn-success am-btn-sm ajax-submit" href="javascript:;">登录</a>
-                <a class="am-btn am-btn-danger am-btn-sm" href="/user/register/index">注册</a>
+                <a class="am-btn am-btn-success am-btn-sm ajax-submit" href="javascript:;">注册</a>
+                <a class="am-btn am-btn-primary am-btn-sm" href="/user/Login/index">登录</a>
             </div>
         </form>
     </div>

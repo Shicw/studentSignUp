@@ -24,13 +24,14 @@ class Login extends Controller
             $this->error('请求失败');
         }
         $post = $this->request->post();
+        $ip = $this->request->ip();
         $username = $post['username'];
         $password = $post['password'];
         if($username=='' || $password==''){
             $this->error('用户名密码不能为空');
         }
         $model = new UserModel();
-        $result = $model->doLogin($username,$password,'user');//登录验证
+        $result = $model->doLogin($username,$password,'user',$ip);//登录验证
         if($result['code']==1){
             $this->success($result['msg'],'/user/Index/index');
         }else{
