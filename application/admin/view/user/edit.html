@@ -35,15 +35,6 @@
                         </label>
                         {/foreach}
                     </div>
-                    <label>专业班级</label>
-                    <select name="class_id">
-                        <option value="" hidden>请选班级</option>
-                        {volist name="classList" id="vo"}
-
-                        {php}$selected = $vo['id']==$class_id ? 'selected' : '';{/php}
-                        <option value="{$vo.id}" {$selected}>{$vo.name}</option>
-                        {/volist}
-                    </select>
                 </div>
                 <div class="am-u-md-6">
                     <label>出生日期</label>

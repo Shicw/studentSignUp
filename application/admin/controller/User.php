@@ -88,9 +88,6 @@ class User extends AdminBaseController
         //获取用户详情
         $model = new UserModel();
         $data = $model->getDetail($id);
-        //加载专业班级选择框列表信息
-        $classList = Db::name('class')->where(['delete_time'=>0])->select();
-        $this->assign('classList',$classList);
         $this->assign($data);
         return $this->fetch();
     }
