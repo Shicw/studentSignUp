@@ -23,7 +23,12 @@ class Index extends UserBaseController
             ->where(['delete_time'=>0,'begin_time'=>['<',$time],'end_time'=>['>',$time]])
             ->limit(4)
             ->select();
-        $this->assign(['items'=>$items]);
+        //获取最新的5条公告
+        $news = Db::name('news')->where('delete_time',0)->limit('5')->select();
+        $this->assign([
+            'items'=>$items,
+            'news'=>$news
+        ]);
         return $this->fetch();
     }
     /**
