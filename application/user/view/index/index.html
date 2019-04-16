@@ -7,19 +7,33 @@
     .am-panel button {
         float: right
     }
-
-    #Modal {
-        height: 350px
+    html,body{
+        width:100%;
+        height:100%
+    }
+    body{
+        background: url(/static/images/bg.png) no-repeat top left;
+        background-size: cover;
     }
 </style>
 </head>
-<body>
+<body background="/static/images/bg.png">
 {include file="public/top" /}
 <div class="am-cf admin-main">
     {include file="public/nav" /}
     <div class="admin-content">
         <div class="admin-content-body">
-            <div class="am-cf am-padding am-u-md-6">
+            <div class="am-cf am-padding am-u-md-12">
+                <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">系统公告</strong></div>
+                <br>
+                {volist name="items" id="vo"}
+                <div class="am-panel am-panel-default" style="margin-bottom: 5px">
+                    <div class="am-panel-bd" style="padding: 5px 15px"><span>{$vo.name|default=$vo.name}</span>
+                    </div>
+                </div>
+                {/volist}
+            </div>
+            <div class="am-cf am-padding am-u-md-12">
                 <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">进行中</strong></div>
                 <br>
                 {volist name="items" id="vo"}
@@ -29,7 +43,7 @@
                 </div>
                 {/volist}
             </div>
-            <div class="am-cf am-padding am-u-md-6">
+            <div class="am-cf am-padding am-u-md-12">
                 <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">个人信息</strong></div>
                 <br>
                 <div class="am-panel am-panel-default">

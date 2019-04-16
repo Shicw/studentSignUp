@@ -1,0 +1,33 @@
+{include file="public/head" /}
+<style>
+    input[name='keyword']{width: 210px}
+    .content h3{text-align: center}
+    .content #time{text-align: center}
+</style>
+</head>
+<body>
+{include file="public/top" /}
+<div class="am-cf admin-main">
+    {include file="public/nav" /}
+
+    <!-- content start -->
+    <div class="admin-content">
+        <div class="admin-content-body">
+            <div class="am-cf am-padding">
+                <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">系统公告管理</strong> / <small>公告详情</small></div>
+
+            </div>
+
+            <div class="am-u-md-12 content">
+                <h3>{$title}</h3>
+                <p id="time">发布时间:{$create_time|date="Y-m-d H:i:s",###}  阅读次数:{$read_count}</p>
+                <hr>
+                <p>{$content}</p>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- content end -->
+</div>
+</body>
+</html>

@@ -1,0 +1,88 @@
+{include file="public/head" /}
+<style>input[name='keyword']{width: 210px}</style>
+</head>
+<body>
+{include file="public/top" /}
+<div class="am-cf admin-main">
+    {include file="public/nav" /}
+
+    <!-- content start -->
+    <div class="admin-content">
+        <div class="admin-content-body">
+            <div class="am-cf am-padding">
+                <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">系统公告管理</strong> / <small>公告列表</small></div>
+
+            </div>
+
+            <div class="am-u-md-12">
+                <div class="am-btn-toolbar">
+                    <div class="am-btn-group am-btn-group-xs">
+                        <a href="/admin/News/add" class="am-btn am-btn-primary">添加</a>
+                    </div>
+                    <div class="am-u-sm-12 am-u-md-6">
+                        <form method="post" action="/admin/News/index">
+                            <div class="am-form-group">
+                                <input type="text" name="keyword" value="{:input('request.keyword')}" placeholder="按标题搜索">
+                                <button type="submit" class="am-btn am-btn-secondary am-btn-xs">搜索</button>
+                                <a href="/admin/News/index" class="am-btn am-btn-danger am-btn-xs">重置</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <table class="am-table am-table-bordered am-table-radius am-table-striped">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>标题</th>
+                        <th>发布时间</th>
+                        <th>阅读次数</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {volist name="rows" id="vo"}
+                    <tr>
+                        <td>{$vo.id}</td>
+                        <td>{$vo.title}</td>
+                        <td>{$vo.create_time}</td>
+                        <td>{$vo.read_count}</td>
+                        <td>
+                            <div class="am-btn-toolbar">
+                                <div class="am-btn-group am-btn-group-xs">
+                                    <a href="{:url('admin/News/edit',['id'=>$vo['id']])}" class="am-btn am-btn-success" style="color: #fff;">编辑</a>
+                                    <a href="{:url('admin/News/detail',['id'=>$vo['id']])}" class="am-btn am-btn-primary" style="color: #fff;">查看</a>
+                                    <button type="button" class="am-btn am-btn-danger" onclick="del(this,{$vo.id})">删除</button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {/volist}
+                    </tbody>
+                </table>
+                <span>共{$rows->total()}条记录</span>
+                <div class="pagination" style="float: right">{$page}</div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- content end -->
+</div>
+<a href="#" class="am-icon-btn am-icon-th-list am-show-sm-only admin-menu" data-am-offcanvas="{target: '#admin-offcanvas'}"></a>
+<script>
+    function del(self,id) {
+        layer.confirm('确认要删除吗?', function (index) {
+            $.post("{:url('admin/News/delete')}", {id: id}, function (res) {
+                if (res.code == 1) {
+                    $(self).closest("tr").remove();//前端删除
+                    layer.msg(res.msg, {time: 1500, icon: 6});
+                } else {
+                    layer.msg(res.msg, {time: 1500, icon: 5});
+                }
+            });
+        });
+    }
+
+</script>
+</body>
+</html>

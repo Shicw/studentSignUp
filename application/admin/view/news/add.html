@@ -1,0 +1,63 @@
+{include file="public/head" /}
+<style>input[name='keyword']{width: 210px}</style>
+</head>
+<body>
+{include file="public/top" /}
+<div class="am-cf admin-main">
+    {include file="public/nav" /}
+
+    <!-- content start -->
+    <div class="admin-content">
+        <div class="admin-content-body">
+            <div class="am-cf am-padding">
+                <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">系统公告管理</strong> / <small>发布公告</small></div>
+
+            </div>
+
+            <div class="am-u-md-8">
+                <label for="title">新闻标题</label>
+                <input type="text" id="title" name="title" class="am-form-field">
+                <label for="content">新闻内容</label>
+                <!-- 加载UEditor编辑器的容器 -->
+                <script id="content" name="content" type="text/plain"></script>
+
+                <div class="am-cf">
+                    <a class="am-btn am-btn-primary am-btn-sm am-fl" href="javascript:;" onclick="submit()">发布</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- content end -->
+</div>
+<!-- UEditor配置文件 -->
+<script type="text/javascript" src="__STATIC__/ueditor-php/ueditor.config.js"></script>
+<!-- 编辑器源码文件 -->
+<script type="text/javascript" src="__STATIC__/ueditor-php/ueditor.all.js"></script>
+<!-- 实例化编辑器 -->
+<script type="text/javascript">
+    var ue = UE.getEditor('content',{
+        initialFrameHeight:280,
+        initialFrameWidth: null,
+        autoHeightEnabled:false,
+        maximumWords:800
+    });
+    function submit() {
+        var title = $("#title").val();
+        var content = ue.getContent();
+        if(title==''||content==''){
+            layer.msg('请输入标题和内容', {time: 1500, icon: 5});
+            return false;
+        }
+        $.post("{:url('admin/News/addPost')}", {title:title,content:content}, function (res) {
+            if (res.code == 1) {
+                layer.msg(res.msg, {time: 1500, icon: 6});
+            } else {
+                layer.msg(res.msg, {time: 1500, icon: 5});
+            }
+        });
+    }
+
+</script>
+</body>
+</html>
