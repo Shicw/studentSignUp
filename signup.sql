@@ -56,3 +56,16 @@ CREATE TABLE `user` (
 #
 
 INSERT INTO `user` VALUES (1,'admin','e10adc3949ba59abbe56e057f20f883e','',0,'',0,0,'',0,'','','',0,1552290161,0);
+#
+# Structure for table "news"
+#
+
+CREATE TABLE `news` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL DEFAULT '' COMMENT '标题',
+  `content` text NOT NULL COMMENT '内容',
+  `read_count` int(11) NOT NULL DEFAULT '0' COMMENT '阅读数量',
+  `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `delete_time` int(11) NOT NULL DEFAULT '0' COMMENT '删除时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
